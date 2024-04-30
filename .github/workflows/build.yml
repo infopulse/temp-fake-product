@@ -1,20 +1,30 @@
-name: Build and Deploy
+name: CalledWorkFlow
 
 on:
   workflow_dispatch:
+    inputs:
+      calledworflow_name:
+        description: 'Name of the workflow to trigger'
+        required: true
+        default: 'playwright-general'
+
+      calledworkflow_github_account:
+        description: 'Github account owner'
+        required: true
+        default: 'infopulse'
+
+      calledworkflow_repo:
+        description: 'Repository of the workflow to trigger'
+        required: true
+        default: 'Playwright-course-python'
   push:
   pull_request:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-
-    # Your build and deploy steps go here
-
     - name: Trigger tests
       uses: actions/github-script@v3
       with:
