@@ -1,0 +1,30 @@
+name: Build and Deploy
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Your build and deploy steps go here
+
+    - name: Trigger tests
+      uses: actions/github-script@v3
+      with:
+        script: |
+          const repo = 'infopulse/Playwright-course-python';
+          const token = secrets.REPO_ACCESS_TOKEN;
+          const payload = { event_type: 'build_completed' };
+          const result = await github.repos.createDispatchEvent({
+            owner: repo.split('/')[0],
+            repo: repo.split('/')[1],
+            event_type: payload.event_type,
+            client_payload: payload,
+          });
+          return result;
+        env:
+          REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
