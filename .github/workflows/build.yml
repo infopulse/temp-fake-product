@@ -2,21 +2,21 @@ name: CalledWorkFlow
 
 on:
   workflow_dispatch:
-    inputs:
-      calledworflow_name:
-        description: 'Name of the workflow to trigger'
-        required: true
-        default: 'playwright-general'
-
-      calledworkflow_github_account:
-        description: 'Github account owner'
-        required: true
-        default: 'infopulse'
-
-      calledworkflow_repo:
-        description: 'Repository of the workflow to trigger'
-        required: true
-        default: 'Playwright-course-python'
+#    inputs:
+#      calledworflow_name:
+#        description: 'Name of the workflow to trigger'
+#        required: true
+#        default: 'playwright-general'
+#
+#      calledworkflow_github_account:
+#        description: 'Github account owner'
+#        required: true
+#        default: 'infopulse'
+#
+#      calledworkflow_repo:
+#        description: 'Repository of the workflow to trigger'
+#        required: true
+#        default: 'Playwright-course-python'
   push:
   pull_request:
 
@@ -25,19 +25,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Trigger tests
+
+    - name: Trigger workflow in another repo
       uses: actions/github-script@v7
       with:
         script: |
           const repo = 'infopulse/Playwright-course-python';
-          const token = process.env.REPO_ACCESS_TOKEN;
-          const payload = { event_type: 'build_completed' };
-          const result = await github.repos.createDispatchEvent({
+          const eventType = 'build_completed';
+          const clientPayload = { event_type: 'build_completed' };
+
+          const response = await github.rest.repos.createDispatchEvent({
             owner: repo.split('/')[0],
             repo: repo.split('/')[1],
-            event_type: payload.event_type,
-            client_payload: payload,
+            event_type: eventType,
+            client_payload: clientPayload,
           });
-          return result;
-      env:
-        REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+          console.log(response);
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
