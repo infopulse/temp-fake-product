@@ -20,7 +20,7 @@ jobs:
       with:
         script: |
           const repo = 'infopulse/Playwright-course-python';
-          const token = secrets.REPO_ACCESS_TOKEN;
+          const token = process.env.REPO_ACCESS_TOKEN;
           const payload = { event_type: 'build_completed' };
           const result = await github.repos.createDispatchEvent({
             owner: repo.split('/')[0],
