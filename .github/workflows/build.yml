@@ -25,4 +25,4 @@ jobs:
           });
 
           console.log(response);
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
